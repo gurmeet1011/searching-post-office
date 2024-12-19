@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Office Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: rgb(14, 11, 23);
+            color: white;
+        }
+
+        #main-container {
+            display: flex;
+            flex-wrap: wrap;
+            height: 100vh;
+        }
+
+        #left-container,
+        #right-container {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        #left-container {
+            background-color: rgb(14, 11, 23);
+        }
+
+        #right-container {
+            background-color: rgb(133, 99, 236);
+        }
+
+        #heading {
+            color: rgb(133, 99, 236);
+        }
+
+        img {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        #btn {
+            background-color: rgb(133, 99, 236);
+            border: 1px solid white;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        #btn:hover {
+            background-color: white;
+            color: rgb(133, 99, 236);
+        }
+
+        #new-page {
+            display: none;
+            padding: 20px;
+            background-color: rgb(14, 11, 23);
+        }
+
+        .info-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .info-block {
+            background-color: #533b99;
+            padding: 15px;
+            border-radius: 8px;
+            width: 48%;
+            color: white;
+        }
+
+        #map {
+            width: 100%;
+            height: 300px;
+            background-color: #8298f1;
+            margin: 20px 0px;
+        }
+        #post-offices{
+            display: flex;
+            justify-content:space-between;
+            gap:20px;
+        }
+        .post-office-card {
+            background-color: #533b99;
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            width: 48%;
+        }
+
+.search-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.search-input-wrapper {
+    position: relative;
+    width: 100%; /* Input field takes full width */
+}
+
+.search-input {
+    padding: 10px 40px 10px 15px; /* Padding to the right for the search icon */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%; /* Input adjusts to the wrapper width */
+    font-size: 16px;
+    box-sizing: border-box; /* Ensures padding doesn't affect input size */
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px; /* Adjust as needed for spacing */
+    transform: translateY(-50%);
+    color: #aaa;
+    font-size: 18px; /* Adjust icon size */
+    pointer-events: none; /* Prevent icon from blocking clicks in the input */
+}
+
+/* Responsive Styles */
+@media (max-width: 550px) {
+    .search-input {
+        font-size: 14px;
+        padding: 8px 35px 8px 12px; /* Adjust padding for smaller screens */
+    }
+
+    .search-icon {
+        font-size: 16px; /* Scale down icon size */
+        right: 8px; /* Adjust spacing */
+    }
+}
+
+@media (max-width: 400px) {
+    .search-input {
+        font-size: 12px;
+        padding: 6px 30px 6px 10px;
+    }
+
+    .search-icon {
+        font-size: 14px;
+    }
+}
+
+
+        /* Responsive Styles */
+        @media (max-width: 550px) {
+        #main-container {
+            flex-direction: column;
+            height: auto;
+        }
+
+        #left-container,
+        #right-container {
+            width: 100%;
+            padding: 20px;
+        }
+
+        #new-page {
+            padding: 10px;
+            margin: 20px;;
+        }
+
+        .info-container {
+             flex-direction: column; 
+            align-items:center;
+            gap: 15px;
+        } 
+
+        .info-block {
+            width: 100%;
+        }
+
+        #map {
+            height: 200px;
+            margin-top: 20px; /* Added space above the map */
+            margin-bottom: 120px; /* Added space below the map */
+            width: 100%;
+        }
+
+        img {
+            max-width: 200px;
+        }
+
+        #btn {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        #post-offices {
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .post-office-card {
+            width: 100%;
+        }
+
+        h2#more,
+        h3 {
+            margin-top: 20px;
+        }
+    }
+
+    @media (max-width: 400px) {
+        #heading {
+            font-size: 24px;
+        }
+
+        h2,
+        h3 {
+            font-size: 18px;
+        }
+
+        #btn {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .info-container {
+            gap: 10px;
+        }
+
+        .info-block {
+            margin-bottom: 10px; /* Added spacing for better alignment */
+        }
+    }
+    </style>
+</head>
+<body>
+    <div id="main-container">
+        <div id="left-container">
+            <h1 id="heading">Post Office Application</h1>
+            <p>This application allows you to extract information about the nearest Post Offices based on your location.</p>
+            <img src="img/mta_01.png" alt="Post Office Application Logo">
+        </div>
+        <div id="right-container">
+            <h2 id="ip-address">Loading your IP address...</h2>
+            <button id="btn">Get Started</button>
+        </div>
+    </div>
+
+    <div id="new-page">
+        <h2>Your Location Information</h2>
+        <div class="info-container">
+            <div class="info-block">
+                <h3>IP Address</h3>
+                <p><span id="new-ip"></span></p>
+            </div>
+            <div class="info-block">
+                <h3>Location</h3>
+                <p>Latitude: <span id="lat"></span></p>
+                <p>Longitude: <span id="long"></span></p>
+            </div>
+            <div class="info-block">
+                <h3>City & Region</h3>
+                <p>City: <span id="city"></span></p>
+                <p>Region: <span id="region"></span></p>
+            </div>
+            <div class="info-block">
+                <h3>Organisation</h3>
+                <p><span id="organisation"></span></p>
+            </div>
+        </div>
+
+        <div id="map"></div>
+
+        <h2 id="more">More Information</h2>
+        <div class="info-container">
+            <div class="info-block">
+                <h3>Time Zone</h3>
+                <p id="time-zone"></p>
+            </div>
+            <div class="info-block">
+                <h3>Date & Time</h3>
+                <p id="date"></p>
+            </div>
+            <div class="info-block">
+                <h3>Pincode</h3>
+                <p id="pincode"></p>
+            </div>
+            <div class="info-block">
+                <h3>Message</h3>
+                <p id="message"></p>
+            </div>
+        </div>
+
+        <h2>Post Offices Near You</h2>
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <input type="text" placeholder="Search by Name" class="search-input">
+                <span class="search-icon">&#128269;</span> <!-- Unicode for search icon -->
+            </div>
+        </div>
+        <div id="post-offices">
+            <!-- Post office cards will be added dynamically -->
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById("btn");
+        const mainContainer = document.getElementById("main-container");
+        const newPage = document.getElementById("new-page");
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const ipAddressEl = document.getElementById("ip-address");
+
+            fetch("https://api.ipify.org?format=json")
+                .then(response => response.json())
+                .then(data => {
+                    ipAddressEl.innerHTML = `Your Current IP Address is ${data.ip}`;
+                })
+                .catch(error => {
+                    ipAddressEl.innerHTML = `Unable to fetch IP address.`;
+                });
+        });
+
+        async function fetchUserInfo(ip) {
+            const url = `https://ipapi.co/${ip}/json/`;
+            try {
+                const response = await fetch(url);
+                return await response.json();
+            } catch (error) {
+                return null;
+            }
+        }
+
+        btn.addEventListener("click", async function () {
+            mainContainer.style.display = "none";
+            newPage.style.display = "block";
+
+            const ipResponse = await fetch("https://api.ipify.org?format=json");
+            const { ip } = await ipResponse.json();
+            const userInfo = await fetchUserInfo(ip);
+
+            if (userInfo) {
+                document.getElementById("new-ip").textContent = userInfo.ip;
+                document.getElementById("lat").textContent = userInfo.latitude;
+                document.getElementById("long").textContent = userInfo.longitude;
+                document.getElementById("city").textContent = userInfo.city;
+                document.getElementById("region").textContent = userInfo.region;
+                document.getElementById("organisation").textContent = userInfo.org;
+                document.getElementById("time-zone").textContent = userInfo.timezone;
+                document.getElementById("date").textContent = new Date().toString();
+                document.getElementById("pincode").textContent = userInfo.postal;
+                document.getElementById("message").textContent = "Number of pincode found:";
+
+                const mapDiv = document.getElementById("map");
+                mapDiv.innerHTML = `<iframe
+                    width="100%"
+                    height="300"
+                    frameborder="0"
+                    src="https://maps.google.com/maps?q=${userInfo.latitude},${userInfo.longitude}&z=15&output=embed"></iframe>`;
+
+                const postOfficesResponse = await fetch(`https://api.postalpincode.in/pincode/${userInfo.postal}`);
+                const postOfficesData = await postOfficesResponse.json();
+
+                if (postOfficesData && postOfficesData.length > 0) {
+                    const postOfficesDiv = document.getElementById("post-offices");
+                    postOfficesData[0].PostOffice.forEach(office => {
+                        const postOfficeCard = document.createElement("div");
+                        postOfficeCard.className = "post-office-card";
+                        postOfficeCard.innerHTML = `
+                            <h3>${office.Name}</h3>
+                            <p>Branch Type: ${office.BranchType}</p>
+                            <p>Delivery Status: ${office.DeliveryStatus}</p>
+                            <p>District: ${office.District}</p>
+                            <p>Division: ${office.Division}</p>
+                        `;
+                        postOfficesDiv.appendChild(postOfficeCard);
+                    });
+                } else {
+                    document.getElementById("post-offices").innerHTML = "<p>No post offices found for this pincode.</p>";
+                }
+            }
+        });
+        document.querySelector(".search-input").addEventListener("input", function (e) {
+    const filterText = e.target.value.toLowerCase(); // Get the search input text
+    const postOfficeCards = document.querySelectorAll(".post-office-card"); // Select all post office cards
+
+    // Loop through each post office card and filter based on the text
+    postOfficeCards.forEach(card => {
+        const officeName = card.querySelector("h3").textContent.toLowerCase(); // Post office name
+        const branchType = card.querySelector("p:nth-child(2)").textContent.toLowerCase(); // Branch type
+
+        // Check if the search input matches either the name or branch type
+        if (officeName.includes(filterText) || branchType.includes(filterText)) {
+            card.style.display = "block"; // Show the card if it matches
+        } else {
+            card.style.display = "none"; // Hide the card if it doesn't match
+        }
+    });
+});
+    </script>
+</body>
+</html>
+
